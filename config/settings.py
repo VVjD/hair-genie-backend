@@ -54,9 +54,13 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_PERMISSION_CLASSES': [
-			'rest_framework.permissions.AllowAny',
-		]
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
 }
 
 MIDDLEWARE = [
@@ -116,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'Asia/Korea'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -144,3 +148,20 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',  # 콘솔에 출력할 로그 레벨 설정
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # 최상위 루트 로거의 로그 레벨 설정
+    },
+}
