@@ -6,4 +6,6 @@ urlpatterns = [
   path('', views.ListUser.as_view()),
   path('<int:pk>/', views.DetailUser.as_view()),
   path('check-id-exists/', views.CheckUserIdExists.as_view()),
+  path('find-userid/', views.FindUserId.as_view()),
+  path('find-userpw/', views.FindUserPw.as_view()),
 ]
