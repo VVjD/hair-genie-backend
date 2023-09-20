@@ -9,4 +9,6 @@ urlpatterns = [
   path('logout/', views.logout_view, name='logout'),
   path('check_login/', views.check_login, name='check_login'),
   path('check-id-exists/', views.CheckUserIdExists.as_view()),
+  path('find-userid/', views.FindUserId.as_view()),
+  path('find-userpw/', views.FindUserPw.as_view()),
 ]
