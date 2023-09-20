@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from .serializers import UserSerializer
 from .models import User
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
 from django.http import JsonResponse
@@ -91,3 +93,13 @@ def logout_view(request):
 @login_required
 def check_login(request):
     return JsonResponse({'isLoggedIn': True})
+
+class CheckUserIdExists(APIView):
+    def get(self, request):
+        uid = request.query_params.get('uid')
+
+        try:
+            user = User.objects.get(uid=uid)
+            return Response({'exists': True}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'exists': False}, status=status.HTTP_200_OK)
