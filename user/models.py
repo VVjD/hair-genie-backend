@@ -19,11 +19,20 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+
+    FACE_SHAPE_CHOICES = [
+        ('계란형', '계란형'),
+        ('하트형', '하트형'),
+        ('둥근형', '둥근형'),
+        ('긴 얼굴형', '긴 얼굴형'),
+        ('각진형', '각진형'),
+    ]
+
     uid = models.CharField(max_length=24, unique=True)
     uname = models.CharField(max_length=24)
     unickname = models.CharField(max_length=24)
-    profile_image = models.TextField()
-    face_shape = models.CharField(max_length=24)
+    profile_image = models.TextField(null=True, blank=True)
+    face_shape = models.CharField(max_length=24, choices=FACE_SHAPE_CHOICES, null=True, blank=True)
     uphone = models.CharField(max_length=24)
     uemail = models.EmailField(unique=True)
     signuptime = models.DateTimeField(auto_now_add=True)
