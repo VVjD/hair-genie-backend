@@ -19,4 +19,6 @@ urlpatterns = [
   # 토큰
   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+  # 사용자 정보
+  path('get-user-info/', views.get_user_info, name='get_user_info'),
 ]
