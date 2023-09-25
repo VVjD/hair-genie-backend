@@ -65,9 +65,20 @@ class FindUserPw(APIView):
             return Response({"mesersage": "사용자를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
         
 # 사용자 정보
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
-def get_user_info(request):
-    user = request.user  # 인증된 사용자를 가져옵니다.
-    serializer = UserSerializer(user)  # 사용자 데이터를 직렬화할 시리얼라이저를 생성합니다.
-    return Response(serializer.data, status=status.HTTP_200_OK)
+def user_info(request):
+    user = request.user
+
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'PUT':
+        updated_data = request.data
+        serializer = UserSerializer(instance=user, data=updated_data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': '사용자 정보가 업데이트되었습니다.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
