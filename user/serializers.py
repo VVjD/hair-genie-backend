@@ -6,7 +6,13 @@ class UserSerializer(serializers.ModelSerializer):
 
   def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
+        profile_image = validated_data.pop('profile_image', None)
         user = super(UserSerializer, self).create(validated_data)
+
+        if not profile_image:
+            user.profile_image = 'profile_imgs/default.png'
+            user.save()
+        
         return user
 
   class Meta:
@@ -15,7 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
               'uid', 
               'password', 
               'uname', 
-              'unickname', 
+              'unickname',
+              'profile_image', 
               'uphone', 
               'uemail', 
               'signuptime')

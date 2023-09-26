@@ -31,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     uid = models.CharField(max_length=24, unique=True)
     uname = models.CharField(max_length=24)
     unickname = models.CharField(max_length=24)
-    profile_image = models.TextField(null=True, blank=True)
+    profile_image = models.ImageField(null=True, blank=True, upload_to='profile_imgs')
     face_shape = models.CharField(max_length=24, choices=FACE_SHAPE_CHOICES, null=True, blank=True)
     uphone = models.CharField(max_length=24)
     uemail = models.EmailField(unique=True)
