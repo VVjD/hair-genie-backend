@@ -6,7 +6,7 @@ class Reservation(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE) 
     salon = models.ForeignKey(Hairsalon, on_delete=models.CASCADE)
     date = models.DateField()
-    time = models.CharField(max_length=5)  # 시간을 문자열로 저장 (예: "10:00")
+    time = models.CharField(max_length=10)
     service = models.ForeignKey(HairsalonService, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     
