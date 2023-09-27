@@ -5,6 +5,9 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 class ListUser(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -60,3 +63,22 @@ class FindUserPw(APIView):
             return Response({"password": serializer.data['password']}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"mesersage": "사용자를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        
+# 사용자 정보
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    user = request.user
+
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'PUT':
+        updated_data = request.data
+        serializer = UserSerializer(instance=user, data=updated_data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': '사용자 정보가 업데이트되었습니다.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -14,6 +14,7 @@ from pathlib import Path
 from . import local_settings
 import pymysql
 from datetime import timedelta
+import os
 
 pymysql.install_as_MySQLdb()
 
@@ -23,6 +24,8 @@ DATABASES = local_settings.DATABASES
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -152,7 +155,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 #JWT_AUTH
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
