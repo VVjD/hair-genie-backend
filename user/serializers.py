@@ -22,7 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
               'password', 
               'uname', 
               'unickname',
-              'profile_image', 
+              'profile_image',
+              'face_shape',
               'uphone', 
               'uemail', 
               'signuptime')
