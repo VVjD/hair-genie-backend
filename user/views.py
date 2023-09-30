@@ -82,3 +82,21 @@ def user_info(request):
             return Response({'message': '사용자 정보가 업데이트되었습니다.'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+# 비밀번호 변경
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    current_password = request.data.get('current_password', '')
+    new_password = request.data.get('new_password', '')
+    user = request.user
+
+    # 현재 비밀번호 검증
+    if not user.check_password(current_password):
+        return Response({'message': '기존 비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 새로운 비밀번호 설정
+    user.set_password(new_password)
+    user.save()
+
+    return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
