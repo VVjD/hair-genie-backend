@@ -23,4 +23,6 @@ urlpatterns = [
   path('info/', views.user_info, name='user_info'),
   # 비밀번호 변경
   path('change_password/', views.change_password, name='change_password'),
+  # 탈퇴
+  path('delete_account/', views.delete_account, name='delete_account'),
 ]
