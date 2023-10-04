@@ -7,7 +7,6 @@ class HairsalonSerializer(serializers.ModelSerializer):
         fields = ('HID', 'HName', 'HLoc')
 
 class HairsalonServiceSerializer(serializers.ModelSerializer):
-    # Hairsalon 모델의 필드를 정의합니다.
     salon_HID = serializers.CharField(source='salon.HID', read_only=True)
 
     class Meta:
