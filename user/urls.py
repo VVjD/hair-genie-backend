@@ -13,9 +13,13 @@ urlpatterns = [
   path('join/', views.Join.as_view(), name='join'),
   # 아이디 중복
   path('check-id-exists/', views.CheckUserIdExists.as_view(), name='check-id-exists'),
-  # id/pw 찾기
+  # id 찾기
   path('find-userid/', views.FindUserId.as_view(), name='find-userid'),
-  path('find-userpw/', views.FindUserPw.as_view(), name='find-userpw'),
+  # pw 찾기
+  path('password_reset/', views.PasswordResetView.as_view(), name='password_reset'),
+  # path('password_reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+  path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+  # path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
   # 토큰
   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

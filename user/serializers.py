@@ -25,6 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
               'profile_image',
               'face_shape',
               'uphone', 
-              'uemail', 
+              'email', 
               'signuptime')
     extra_kwargs = {'password': {'write_only': True}} # 비밀번호는 응답 x
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    uname = serializers.CharField()
+    uid = serializers.CharField()

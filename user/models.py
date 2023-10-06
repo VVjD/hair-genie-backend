@@ -35,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_image = models.ImageField(null=True, blank=True, upload_to='profile_imgs')
     face_shape = models.CharField(max_length=24, choices=FACE_SHAPE_CHOICES, default='선택')
     uphone = models.CharField(max_length=24)
-    uemail = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)
     signuptime = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -43,7 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'uid'
-    REQUIRED_FIELDS = ['uemail']
+    REQUIRED_FIELDS = ['email']
 
     class Meta:
         db_table = "User"
