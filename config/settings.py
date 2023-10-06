@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'reservation',
     'hairsynthesis',
     'hairsalon',
-    'faceshape',
 
     'rest_framework',
     'rest_framework_simplejwt',
