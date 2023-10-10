@@ -21,9 +21,4 @@ app_name = 'hairsynthesis'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('user.urls')),
-    path('hairsalon/', include('hairsalon.urls')),
-    path('reservation/', include('reservation.urls')),
-    path('faceshape/', include('faceshape.urls')),
-    path('hairsynthesis/', include('hairsynthesis.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
