@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hair Synthesis App</title>
+</head>
+<body>
+    <h1>Hair Synthesis App</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/*">
+        <button type="submit">합성</button>
+    </form>
+    
+    <div>
+        <h2>합성된 이미지</h2>
+        {% for image in synthesized_images %}
+            <img src="{{ image.image.url }}" alt="Synthesized Image">
+        {% empty %}
+            <p>합성된 이미지가 없습니다.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
