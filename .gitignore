@@ -7,4 +7,8 @@ migrations/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media
+models
+/media/cropped_faceshape/*
+/media/uploads_faceshape/*
+/media/profile_imgs/*
+!/media/profile_imgs/default.png
