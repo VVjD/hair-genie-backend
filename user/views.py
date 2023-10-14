@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .serializers import UserSerializer, PasswordResetSerializer
 from .models import User
 from rest_framework import generics, status
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -15,7 +16,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 
-# Create your views here.
 class ListUser(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -164,7 +164,7 @@ def change_password(request):
 
     return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
 
-# 탈퇴
+# 회원탈퇴
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):
@@ -179,3 +179,22 @@ def delete_account(request):
         return Response({'message': '회원 탈퇴가 성공적으로 처리되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+#토큰 만료 자동 로그아웃
+class CheckTokenExpiration(APIView):
+    def get(self, request):
+        refresh_token = request.META.get('HTTP_AUTHORIZATION')  # 헤더에서 리프레시 토큰 가져오기
+
+        if not refresh_token:
+            return Response({'error': 'Refresh token is missing.'}, status=status.HTTP_BAD_REQUEST)
+
+        try:
+            refresh_token = refresh_token.split(" ")[1]  # "Bearer <token>" 형식의 Authorization 헤더에서 토큰 추출
+            refresh_token = RefreshToken(refresh_token)
+        except Exception as e:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_BAD_REQUEST)
+
+        if refresh_token.is_expired:
+            return Response({'message': 'Token is expired.'}, status=status.HTTP_UNAUTHORIZED)
+        else:
+            return Response({'message': 'Token is valid.'}, status=status.HTTP_OK)
