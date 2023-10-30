@@ -4,7 +4,7 @@ from .models import Hairsalon, HairsalonService
 class HairsalonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hairsalon
-        fields = ('HID', 'HName', 'HLoc')
+        fields = ('HID', 'HName', 'HLoc', 'HRegion')
 
 class HairsalonServiceSerializer(serializers.ModelSerializer):
     salon_HID = serializers.CharField(source='salon.HID', read_only=True)

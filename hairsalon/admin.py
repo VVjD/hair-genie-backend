@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import Hairsalon, HairsalonService
 
+class HairsalonAdmin(admin.ModelAdmin):
+    list_display = ('HID', 'HName', 'HLoc', 'HRegion')
+    list_filter = ('HRegion',)
+    
+admin.site.register(Hairsalon, HairsalonAdmin)
+
 class HairsalonServiceAdmin(admin.ModelAdmin):
     list_display = ('salon_HName', 'menu_name', 'service_name', 'price')
     list_filter = ('salon__HName', 'menu_name')  
@@ -10,5 +16,4 @@ class HairsalonServiceAdmin(admin.ModelAdmin):
     
     salon_HName.short_description = 'Hairsalon Name' 
 
-admin.site.register(Hairsalon)
 admin.site.register(HairsalonService, HairsalonServiceAdmin)
