@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 class Hairsalon(models.Model):
     HID = models.CharField(max_length=50, primary_key=True)
@@ -23,7 +24,7 @@ class Hairsalon(models.Model):
         ('경남', '경남'),
         ('제주', '제주'),
     ]
-    HRegion = models.CharField(max_length=20, choices=REGION_CHOICES, default='서울')
+    HRegion = models.CharField(max_length=20, choices=REGION_CHOICES)
     
     def __str__(self):
         return self.HName

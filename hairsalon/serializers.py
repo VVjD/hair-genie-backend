@@ -12,3 +12,4 @@ class HairsalonServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = HairsalonService
         fields = ('id', 'salon', 'salon_HID', 'menu_name', 'service_name', 'price')
+        
