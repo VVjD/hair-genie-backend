@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'reservation',
     'hairsynthesis',
     'hairsalon',
+    'faceshape',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -156,7 +157,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 # JWT_AUTH
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=300),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
