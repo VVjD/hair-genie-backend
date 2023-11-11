@@ -12,7 +12,6 @@ import os
 from os.path import join as ospj
 import time
 import datetime
-from munch import Munch
 
 import torch
 import torch.nn as nn

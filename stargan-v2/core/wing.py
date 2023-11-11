@@ -15,18 +15,22 @@ from collections import namedtuple
 from copy import deepcopy
 from functools import partial
 
-from munch import Munch
 import numpy as np
 import cv2
-from skimage.filters import gaussian
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import namedtuple
 
+class IDXPAIR(namedtuple('IDXPAIR', 'start end')):
+    pass
+
+
+class OPPAIR(namedtuple('OPPAIR', 'shift resize')):
+    pass
 
 def get_preds_fromhm(hm):
-    max, idx = torch.max(
-        hm.view(hm.size(0), hm.size(1), hm.size(2) * hm.size(3)), 2)
+    max_vals, idx = torch.max(hm.view(hm.size(0), hm.size(1), -1), 2)
     idx += 1
     preds = idx.view(idx.size(0), idx.size(1), 1).repeat(1, 1, 2).float()
     preds[..., 0].apply_(lambda x: (x - 1) % hm.size(3) + 1)
@@ -87,7 +91,6 @@ class HourGlass(nn.Module):
         x, last_channel = self.coordconv(x, heatmap)
         return self._forward(self.depth, x), last_channel
 
-
 class AddCoordsTh(nn.Module):
     def __init__(self, height=64, width=64, with_r=False, with_boundary=False):
         super(AddCoordsTh, self).__init__()
@@ -100,14 +103,14 @@ class AddCoordsTh(nn.Module):
             y_coords = torch.arange(width).unsqueeze(0).expand(height, width).float()
             x_coords = (x_coords / (height - 1)) * 2 - 1
             y_coords = (y_coords / (width - 1)) * 2 - 1
-            coords = torch.stack([x_coords, y_coords], dim=0)  # (2, height, width)
+            coords = torch.stack([x_coords, y_coords], dim=0)
 
             if self.with_r:
-                rr = torch.sqrt(torch.pow(x_coords, 2) + torch.pow(y_coords, 2))  # (height, width)
+                rr = torch.sqrt(torch.pow(x_coords, 2) + torch.pow(y_coords, 2))
                 rr = (rr / torch.max(rr)).unsqueeze(0)
                 coords = torch.cat([coords, rr], dim=0)
 
-            self.coords = coords.unsqueeze(0).to(device)  # (1, 2 or 3, height, width)
+            self.coords = coords.unsqueeze(0).to(device)
             self.x_coords = x_coords.to(device)
             self.y_coords = y_coords.to(device)
 
@@ -386,23 +389,43 @@ def landmarks2S(x, y):
     return S
 
 
+def custom_gaussian_blur(input_tensor, kernel_size):
+    # Define a 2D Gaussian kernel
+    gauss_kernel = torch.tensor([[1, 2, 1],
+                                 [2, 4, 2],
+                                 [1, 2, 1]], dtype=torch.float32)
+    gauss_kernel = gauss_kernel / gauss_kernel.sum()
+
+    # Expand dimensions for convolution
+    gauss_kernel = gauss_kernel.unsqueeze(0).unsqueeze(0)
+
+    # Convert RGB to grayscale
+    input_tensor_gray = torch.mean(input_tensor, dim=1, keepdim=True)
+
+    # Apply convolution using the Gaussian kernel
+    blurred_tensor = F.conv2d(input_tensor_gray, gauss_kernel, padding=1)
+
+    return blurred_tensor
+
 def pad_mirror(img, landmarks):
     H, W, _ = img.shape
-    img = np.pad(img, ((H//2, H//2), (W//2, W//2), (0, 0)), 'reflect')
-    small_blurred = gaussian(cv2.resize(img, (W, H)), H//100)
+    img = np.pad(img, ((H // 2, H // 2), (W // 2, W // 2), (0, 0)), 'reflect')
+    
+    # Use custom Gaussian blur function instead of torchvision's gaussian
+    small_blurred = custom_gaussian_blur(torch.tensor(cv2.resize(img, (W, H))).permute(2, 0, 1).unsqueeze(0).float() / 255, kernel_size=H // 100).squeeze().permute(1, 2, 0).numpy()
+    
     blurred = cv2.resize(small_blurred, (W * 2, H * 2)) * 255
 
     H, W, _ = img.shape
     coords = np.meshgrid(np.arange(H), np.arange(W), indexing="ij")
-    weight_y = np.clip(coords[0] / (H//4), 0, 1)
-    weight_x = np.clip(coords[1] / (H//4), 0, 1)
+    weight_y = np.clip(coords[0] / (H // 4), 0, 1)
+    weight_x = np.clip(coords[1] / (H // 4), 0, 1)
     weight_y = np.minimum(weight_y, np.flip(weight_y, axis=0))
     weight_x = np.minimum(weight_x, np.flip(weight_x, axis=1))
-    weight = np.expand_dims(np.minimum(weight_y, weight_x), 2)**4
+    weight = np.expand_dims(np.minimum(weight_y, weight_x), 2) ** 4
     img = img * weight + blurred * (1 - weight)
-    landmarks += np.array([W//4, H//4])
+    landmarks += np.array([W // 4, H // 4])
     return img, landmarks
-
 
 def align_faces(args, input_dir, output_dir):
     import os
@@ -478,59 +501,59 @@ def shift(x, N):
 
 
 IDXPAIR = namedtuple('IDXPAIR', 'start end')
-index_map = Munch(chin=IDXPAIR(0 + 8, 33 - 8),
-                  eyebrows=IDXPAIR(33, 51),
-                  eyebrowsedges=IDXPAIR(33, 46),
-                  nose=IDXPAIR(51, 55),
-                  nostrils=IDXPAIR(55, 60),
-                  eyes=IDXPAIR(60, 76),
-                  lipedges=IDXPAIR(76, 82),
-                  lipupper=IDXPAIR(77, 82),
-                  liplower=IDXPAIR(83, 88),
-                  lipinner=IDXPAIR(88, 96))
+index_map = {'chin': IDXPAIR(0 + 8, 33 - 8),
+             'eyebrows': IDXPAIR(33, 51),
+             'eyebrowsedges': IDXPAIR(33, 46),
+             'nose': IDXPAIR(51, 55),
+             'nostrils': IDXPAIR(55, 60),
+             'eyes': IDXPAIR(60, 76),
+             'lipedges': IDXPAIR(76, 82),
+             'lipupper': IDXPAIR(77, 82),
+             'liplower': IDXPAIR(83, 88),
+             'lipinner': IDXPAIR(88, 96)}
+
 OPPAIR = namedtuple('OPPAIR', 'shift resize')
 
 
-def preprocess(x):
+def preprocess(x, index_map):
     """Preprocess 98-dimensional heatmaps."""
     N, C, H, W = x.size()
     x = truncate(x)
     x = normalize(x)
 
     sw = H // 256
-    operations = Munch(chin=OPPAIR(0, 3),
-                       eyebrows=OPPAIR(-7*sw, 2),
-                       nostrils=OPPAIR(8*sw, 4),
-                       lipupper=OPPAIR(-8*sw, 4),
-                       liplower=OPPAIR(8*sw, 4),
-                       lipinner=OPPAIR(-2*sw, 3))
+    operations = {'chin': OPPAIR(0, 3),
+                  'eyebrows': OPPAIR(-7 * sw, 2),
+                  'nostrils': OPPAIR(8 * sw, 4),
+                  'lipupper': OPPAIR(-8 * sw, 4),
+                  'liplower': OPPAIR(8 * sw, 4),
+                  'lipinner': OPPAIR(-2 * sw, 3)}
 
     for part, ops in operations.items():
         start, end = index_map[part]
         x[:, start:end] = resize(shift(x[:, start:end], ops.shift), ops.resize)
 
-    zero_out = torch.cat([torch.arange(0, index_map.chin.start),
-                          torch.arange(index_map.chin.end, 33),
-                          torch.LongTensor([index_map.eyebrowsedges.start,
-                                            index_map.eyebrowsedges.end,
-                                            index_map.lipedges.start,
-                                            index_map.lipedges.end])])
+    zero_out = torch.cat([torch.arange(0, index_map['chin'].start),
+                          torch.arange(index_map['chin'].end, 33),
+                          torch.LongTensor([index_map['eyebrowsedges'].start,
+                                            index_map['eyebrowsedges'].end,
+                                            index_map['lipedges'].start,
+                                            index_map['lipedges'].end])])
     x[:, zero_out] = 0
 
-    start, end = index_map.nose
-    x[:, start+1:end] = shift(x[:, start+1:end], 4*sw)
+    start, end = index_map['nose']
+    x[:, start + 1:end] = shift(x[:, start + 1:end], 4 * sw)
     x[:, start:end] = resize(x[:, start:end], 1)
 
-    start, end = index_map.eyes
+    start, end = index_map['eyes']
     x[:, start:end] = resize(x[:, start:end], 1)
-    x[:, start:end] = resize(shift(x[:, start:end], -8), 3) + \
-        shift(x[:, start:end], -24)
+    x[:, start:end] = resize(shift(x[:, start:end], -8), 3) + shift(x[:, start:end], -24)
 
     # Second-level mask
-    x2 = deepcopy(x)
-    x2[:, index_map.chin.start:index_map.chin.end] = 0  # start:end was 0:33
-    x2[:, index_map.lipedges.start:index_map.lipinner.end] = 0  # start:end was 76:96
-    x2[:, index_map.eyebrows.start:index_map.eyebrows.end] = 0  # start:end was 33:51
+    x2 = x.clone()
+    x2[:, index_map['chin'].start:index_map['chin'].end] = 0  # start:end was 0:33
+    x2[:, index_map['lipedges'].start:index_map['lipinner'].end] = 0  # start:end was 76:96
+    x2[:, index_map['eyebrows'].start:index_map['eyebrows'].end] = 0  # start:end was 33:51
 
     x = torch.sum(x, dim=1, keepdim=True)  # (N, 1, H, W)
     x2 = torch.sum(x2, dim=1, keepdim=True)  # mask without faceline and mouth

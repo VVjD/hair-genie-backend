@@ -13,7 +13,6 @@ from itertools import chain
 import os
 import random
 
-from munch import Munch
 from PIL import Image
 import numpy as np
 
@@ -132,17 +131,15 @@ class InputFetcher:
             x_ref, x_ref2, y_ref = self._fetch_refs()
             z_trg = torch.randn(x.size(0), self.latent_dim)
             z_trg2 = torch.randn(x.size(0), self.latent_dim)
-            inputs = Munch(x_src=x, y_src=y, y_ref=y_ref,
-                           x_ref=x_ref, x_ref2=x_ref2,
-                           z_trg=z_trg, z_trg2=z_trg2)
+            inputs = {'x_src': x, 'y_src': y, 'y_ref': y_ref,
+                      'x_ref': x_ref, 'x_ref2': x_ref2,
+                      'z_trg': z_trg, 'z_trg2': z_trg2}
         elif self.mode == 'val':
             x_ref, y_ref = self._fetch_inputs()
-            inputs = Munch(x_src=x, y_src=y,
-                           x_ref=x_ref, y_ref=y_ref)
+            inputs = {'x_src': x, 'y_src': y, 'x_ref': x_ref, 'y_ref': y_ref}
         elif self.mode == 'test':
-            inputs = Munch(x=x, y=y)
+            inputs = {'x': x, 'y': y}
         else:
             raise NotImplementedError
 
-        return Munch({k: v.to(self.device)
-                      for k, v in inputs.items()})
+        return {k: v.to(self.device) for k, v in inputs.items()}

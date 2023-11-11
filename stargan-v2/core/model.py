@@ -11,7 +11,6 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 import copy
 import math
 
-from munch import Munch
 import numpy as np
 import torch
 import torch.nn as nn
@@ -284,11 +283,11 @@ def build_model(args):
     mapping_network_ema = MappingNetwork(args.latent_dim, args.style_dim, args.num_domains)
     style_encoder_ema = StyleEncoder(args.img_size, args.style_dim, args.num_domains)
 
-    nets_ema = Munch(generator=generator_ema,
-                     mapping_network=mapping_network_ema,
-                     style_encoder=style_encoder_ema)
-
-    fan = FAN(fname_pretrained=args.wing_path).eval()
-    nets_ema.fan = fan
+    nets_ema = {
+        'generator': generator_ema,
+        'mapping_network': mapping_network_ema,
+        'style_encoder': style_encoder_ema,
+        'fan': FAN(fname_pretrained=args.wing_path).eval()
+    }
 
     return nets_ema

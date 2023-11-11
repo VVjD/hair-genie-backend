@@ -9,6 +9,7 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 """
 import cv2
 import matplotlib.pyplot as plt
+import torchvision.transforms.functional as F_t
 
 import os
 from os.path import join as ospj
@@ -17,7 +18,6 @@ import glob
 from shutil import copyfile
 
 from tqdm import tqdm
-import ffmpeg
 
 import numpy as np
 import torch
@@ -42,7 +42,11 @@ def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename):
     wb = torch.ones(1, C, H, W).to(x_src.device)
     x_src_with_wb = torch.cat([wb, x_src], dim=0)
 
+    # Replace gaussian_blur with torchvision.transforms.functional.gaussian
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
+    if masks is not None:
+        masks = F_t.gaussian(masks, kernel_size=15)
+
     s_ref = nets.style_encoder(x_ref, y_ref)
     s_ref_list = s_ref.unsqueeze(1).repeat(1, N, 1)
     x_concat = [x_src_with_wb]
