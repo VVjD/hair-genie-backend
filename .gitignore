@@ -7,8 +7,27 @@ migrations/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-models
+
+# 얼굴형 분석 모델
+/models
+
+# 얼굴형 분석 사진
 /media/cropped_faceshape/*
 /media/uploads_faceshape/*
+
+# 프로필 사진
 /media/profile_imgs/*
 !/media/profile_imgs/default.png
+
+# 헤어스타일 합성 사진
+/media/representative/custom/ref/*
+/media/representative/custom/src/*
+
+/media/representative/hair/ref/h/*
+/media/representative/hair/src/h/*
+
+# 헤어스타일 합성 결과 사진
+/media/representative/results/*
+
+# 헤어스타일 합성 모델
+/stargan-v2/expr/checkpoints/*
