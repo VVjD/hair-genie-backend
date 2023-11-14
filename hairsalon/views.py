@@ -24,3 +24,4 @@ class HairsalonServiceListView(generics.ListAPIView):
 class HairsalonServiceDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = HairsalonService.objects.all()
     serializer_class = HairsalonServiceSerializer
+    
