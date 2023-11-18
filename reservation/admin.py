@@ -3,7 +3,7 @@ from .models import Reservation, Review
 
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('customer', 'salon', 'date', 'time', 'service', 'status', 'created')
-    list_filter = ('date', 'salon', 'status')
+    list_filter = ('customer', 'date', 'salon', 'status')
 
 admin.site.register(Reservation, ReservationAdmin)
 
