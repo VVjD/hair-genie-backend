@@ -89,11 +89,13 @@ def update_review(request, review_number):
         return Response({'message': '리뷰를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        # 수정할 데이터를 요청에서 가져옵니다.
+        # 수정할 데이터를 요청에서 가져오기
         content = request.data.get('content', review.content)
+        rating = request.data.get('rating', review.rating)
 
-        # 리뷰 내용을 수정합니다.
+        # 리뷰 내용을 수정/.
         review.content = content
+        review.rating = rating
         review.save()
 
         return Response({'message': '리뷰가 성공적으로 수정되었습니다.'})

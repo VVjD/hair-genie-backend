@@ -3,7 +3,7 @@ from .models import Hairsalon, HairsalonService
 
 #미용실
 class HairsalonAdmin(admin.ModelAdmin):
-    list_display = ('HID', 'HName', 'HLoc', 'HRegion')
+    list_display = ('HID', 'HName', 'HLoc', 'HRegion', 'HPhone')
     list_filter = ('HRegion',)
     
 admin.site.register(Hairsalon, HairsalonAdmin)

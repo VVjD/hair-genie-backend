@@ -10,4 +10,4 @@ class ReservationSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('review_number', 'salon', 'customer', 'reservation', 'content', 'created_at')
+        fields = ('review_number', 'salon', 'customer', 'reservation', 'content', 'rating', 'created_at')

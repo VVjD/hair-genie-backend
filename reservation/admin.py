@@ -9,7 +9,7 @@ admin.site.register(Reservation, ReservationAdmin)
 
 #리뷰
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('review_number', 'salon', 'customer', 'reservation', 'content', 'created_at')
-    list_filter = ('salon', 'customer')
+    list_display = ('review_number', 'salon', 'customer', 'reservation', 'content', 'rating', 'created_at')
+    list_filter = ('salon', 'customer', 'rating')
     
 admin.site.register(Review, ReviewAdmin)
