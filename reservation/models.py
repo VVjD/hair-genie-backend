@@ -4,6 +4,7 @@ from user.models import User
 from django.utils import timezone
 from datetime import datetime, time
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 #예약
 class Reservation(models.Model):
@@ -52,7 +53,18 @@ class Review(models.Model):
     salon = models.ForeignKey(Hairsalon, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
-    content = models.TextField(max_length=400) 
+    content = models.TextField(max_length=400)
+    RATING_CHOICES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+    )
+    rating = models.IntegerField(
+        choices=RATING_CHOICES,
+        default=5
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     
     def clean(self):
