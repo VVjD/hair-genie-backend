@@ -23,11 +23,11 @@ class CheckpointIO(object):
         self.module_dict.update(kwargs)
 
     def load(self, step):
-        fname = self.fname_template
+        fname = self.fname_template.format(step)
         assert os.path.exists(fname), fname + ' does not exist!'
         print('Loading checkpoint from %s...' % fname)
 
         module_dict = torch.load(fname, map_location=torch.device('cpu'))
             
         for name, module in self.module_dict.items():
-            module.load_state_dict(module_dict[name])
+            module.load_state_dict(module_dict[name], False)
