@@ -1,4 +1,5 @@
 import cv2
+import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
@@ -23,8 +24,10 @@ def crop_face(image_path):
     return cropped_image
 
 def predict_face_type(out_path):
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(current_directory, '..', 'models', 'fsmodel.h5')
     
-    model = tf.keras.models.load_model('./models/fsmodel.h5')
+    model = tf.keras.models.load_model(model_path)
     face_types = ['Heart', 'Oblong', 'Oval', 'Round', 'Square']
 
     img = image.load_img(out_path, target_size=(224, 224))

@@ -23,7 +23,8 @@ class Hairsalon(models.Model):
         ('경남', '경남'),
         ('제주', '제주'),
     ]
-    HRegion = models.CharField(max_length=20, choices=REGION_CHOICES, default='서울')
+    HRegion = models.CharField(max_length=20, choices=REGION_CHOICES)
+    HPhone = models.CharField(max_length=15, default='00-000-0000') #한 번 마이그레이션 후 default 삭제
     
     def __str__(self):
         return self.HName
