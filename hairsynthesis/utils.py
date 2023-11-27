@@ -13,9 +13,9 @@ def crop_face(image_path):
         return ValueError("이미지에서 얼굴을 찾을 수 없습니다.")
 
     x, y, w, h = faces[0]
-    x = max(0, x - 20)
-    y = max(0, y - 20)
-    cropped_image = image[y:y+h+40, x:x+w+40]
+    x = max(0, x - 120)
+    y = max(0, y - 120)
+    cropped_image = image[y:y+h+170, x:x+w+170]
 
     return cropped_image
 
@@ -39,9 +39,6 @@ def hair_synthesis():
 
         subprocess.run([
             'python', 'main.py', '--mode', 'sample',
-            '--num_domains', '1',
-            '--resume_iter', '50000',
-            '--w_hpf', '1',
             '--checkpoint_dir', 'expr/checkpoints/',
             '--result_dir', '../media/representative/results/',
             '--src_dir', '../media/representative/hair/src',
