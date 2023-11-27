@@ -37,7 +37,7 @@ class HairSynthesis(APIView):
                 hair_synthesis()
 
                 respone_data = {
-                    'hair_synthesis_result': os.path.join('/media/representative/results/out.png')
+                    'hair_synthesis_result': os.path.join('/media/representative/results/reference_1.jpg')
                 }
                 return Response(respone_data, status=status.HTTP_200_OK)
 

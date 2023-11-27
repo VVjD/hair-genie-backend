@@ -8,7 +8,6 @@ http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
 Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 """
 
-import copy
 import math
 
 from munch import Munch
@@ -126,7 +125,7 @@ class HighPass(nn.Module):
         self.register_buffer('filter',
                              torch.tensor([[-1, -1, -1],
                                            [-1, 8., -1],
-                                           [-1, -1, -1]]) / w_hpf)
+                                           [-1, -1, -1]]).to(device) / w_hpf)
 
     def forward(self, x):
         filter = self.filter.unsqueeze(0).unsqueeze(1).repeat(x.size(1), 1, 1, 1)
@@ -213,7 +212,7 @@ class MappingNetwork(nn.Module):
         for layer in self.unshared:
             out += [layer(h)]
         out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
-        idx = torch.LongTensor(range(y.size(0))).to(y.device)
+        idx = torch.LongTensor(range(1)).to(y.device)
         s = out[idx, y]  # (batch, style_dim)
         return s
 
