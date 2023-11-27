@@ -26,4 +26,6 @@ urlpatterns = [
     path('reservation/', include('reservation.urls')),
     path('faceshape/', include('faceshape.urls')),
     path('hairsynthesis/', include('hairsynthesis.urls')),
+    path('board/', include('board.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
