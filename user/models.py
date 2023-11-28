@@ -2,17 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 class UserManager(BaseUserManager):
-    def create_user(self, uid, uemail, password=None, **extra_fields):
+    def create_user(self, uid, email, password=None, **extra_fields):
         if not uid:
             raise ValueError('아이디는 필수입니다')
-        email = self.normalize_email(uemail) # 이메일 정규화
-        user = self.model(uid=uid, uemail=email, **extra_fields)
+        email = self.normalize_email(email) # 이메일 정규화
+        user = self.model(uid=uid, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, uid, uemail, password=None, **extra_fields):
-        user = self.create_user(uid=uid, uemail=uemail, password=password, **extra_fields)
+    def create_superuser(self, uid, email, password=None, **extra_fields):
+        user = self.create_user(uid=uid, email=email, password=password, **extra_fields)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
