@@ -19,15 +19,6 @@ from core.data_loader import get_test_loader
 from core.solver import Solver
 
 
-def str2bool(v):
-    return v.lower() in ('true')
-
-
-def subdirs(dname):
-    return [d for d in os.listdir(dname)
-            if os.path.isdir(os.path.join(dname, d))]
-
-
 def main(args):
     # print(args)
     cudnn.benchmark = True
@@ -41,8 +32,6 @@ def main(args):
     solver = Solver(args)
 
     if args.mode == 'sample':
-        assert len(subdirs(args.src_dir)) == args.num_domains
-        assert len(subdirs(args.ref_dir)) == args.num_domains
         loaders = Munch(src=get_test_loader(root=args.src_dir,
                                             img_size=args.img_size,
                                             shuffle=False,
@@ -56,6 +45,7 @@ def main(args):
     elif args.mode == 'align':
         from core.wing import align_faces
         align_faces(args, args.inp_dir, args.out_dir)
+
     else:
         raise NotImplementedError
 
@@ -86,27 +76,26 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=777,
                         help='Seed for random number generator')
 
-    # directory for training
     parser.add_argument('--checkpoint_dir', type=str, default='expr/checkpoints',
                         help='Directory for saving network checkpoints')
-
-    # directory for testing
+    parser.add_argument('--resume_iter', type=int, default=500000,
+                        help='Iterations to resume training/testing')
+    
     parser.add_argument('--result_dir', type=str, default='expr/results',
-                        help='Directory for saving generated images and videos')
-    parser.add_argument('--src_dir', type=str, default='assets/representative/hair/src',
+                        help='Directory for saving generated images')
+    parser.add_argument('--src_dir', type=str, default='media/representative/hair/src',
                         help='Directory containing input source images')
-    parser.add_argument('--ref_dir', type=str, default='assets/representative/hair/ref',
+    parser.add_argument('--ref_dir', type=str, default='media/representative/hair/ref',
                         help='Directory containing input reference images')
-    parser.add_argument('--inp_dir', type=str, default='assets/representative/custom/female',
-                        help='input directory when aligning faces')
-    parser.add_argument('--out_dir', type=str, default='assets/representative/celeba_hq/src/female',
-                        help='output directory when aligning faces')
 
     # face alignment
+    parser.add_argument('--inp_dir', type=str, default='media/representative/hair',
+                        help='input directory when aligning faces')
+    parser.add_argument('--out_dir', type=str, default='media/representative/hair',
+                        help='output directory when aligning faces')
+    
     parser.add_argument('--wing_path', type=str, default='expr/checkpoints/wing.ckpt')
     parser.add_argument('--lm_path', type=str, default='expr/checkpoints/celeba_lm_mean.npz')
 
-    parser.add_argument('--resume_iter', type=int, default=500000,
-                        help='Iterations to resume training/testing')
     args = parser.parse_args()
     main(args)
