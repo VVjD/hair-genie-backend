@@ -10,13 +10,9 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 import os
 from os.path import join as ospj
-import time
-import datetime
-from munch import Munch
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 from core.model import build_model
 from core.checkpoint import CheckpointIO

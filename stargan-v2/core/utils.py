@@ -7,23 +7,10 @@ This work is licensed under the Creative Commons Attribution-NonCommercial
 http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
 Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 """
-import cv2
+
 import matplotlib.pyplot as plt
-
-import os
-from os.path import join as ospj
-import json
-import glob
-from shutil import copyfile
-
-from tqdm import tqdm
-import ffmpeg
-
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torchvision
 import torchvision.utils as vutils
 
 
