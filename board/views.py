@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import Board
-from .serializers import BoardSerializer
+from .models import Board, Comment
+from .serializers import BoardSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -30,3 +30,11 @@ class IncrementViews(APIView):
         
         except Board.DoesNotExist:
             return Response({'message': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+# 댓글
+class CommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        board_id = self.kwargs['pk']
+        return Comment.objects.filter(board_id=board_id)
