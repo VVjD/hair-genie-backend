@@ -8,10 +8,15 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
 class BoardListCreateView(generics.ListCreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+
+    def get_queryset(self):
+        queryset = Board.objects.annotate(comment_count=Count('comments'))
+        return queryset
     
 class BoardRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Board.objects.all()

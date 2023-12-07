@@ -2,9 +2,14 @@ from rest_framework import serializers
 from .models import Board, Comment
 
 class BoardSerializer(serializers.ModelSerializer):
+    comment_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Board
         fields = '__all__'
+
+    def get_comment_count(self, obj):
+        return obj.comments.count()
 
 class CommentSerializer(serializers.ModelSerializer):
     user_profile_image = serializers.CharField(source='customer.profile_image', read_only=True)
