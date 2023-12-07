@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework import permissions
+from django.shortcuts import get_object_or_404
 
 class BoardListCreateView(generics.ListCreateAPIView):
     queryset = Board.objects.all()
@@ -31,10 +34,25 @@ class IncrementViews(APIView):
         except Board.DoesNotExist:
             return Response({'message': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
         
-# 댓글
+# 댓글 조회/작성
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
         board_id = self.kwargs['pk']
         return Comment.objects.filter(board_id=board_id)
+    
+# 댓글 수정/삭제
+class CommentUpdateView(RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        board_id = self.kwargs['pk']
+        comment_id = self.kwargs['comment_id']
+        return Comment.objects.filter(board_id=board_id, id=comment_id)
+    
+    def get_object(self):
+        board_id = self.kwargs['pk']
+        comment_id = self.kwargs['comment_id']
+        return get_object_or_404(Comment, board_id=board_id, id=comment_id)

@@ -27,7 +27,8 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comment by {self.customer.uname} on {self.board.title}"
-
+        # return f"Comment by {self.customer.uname} on {self.board.title}"
+        return self.comment
+    
     class Meta:
         db_table = "Comment"
