@@ -19,3 +19,16 @@ class Board(models.Model):
     
     class Meta:
         db_table = "Board"
+
+class Comment(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='comments')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        # return f"Comment by {self.customer.uname} on {self.board.title}"
+        return self.comment
+    
+    class Meta:
+        db_table = "Comment"

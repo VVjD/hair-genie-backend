@@ -1,15 +1,23 @@
 from rest_framework import generics
-from .models import Board
-from .serializers import BoardSerializer
+from .models import Board, Comment
+from .serializers import BoardSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework import permissions
+from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from django.core.exceptions import PermissionDenied
 
 class BoardListCreateView(generics.ListCreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+
+    def get_queryset(self):
+        queryset = Board.objects.annotate(comment_count=Count('comments'))
+        return queryset
     
     #관리자만 공지 작성할 수 있게 설정
     def perform_create(self, serializer):
@@ -38,3 +46,26 @@ class IncrementViews(APIView):
         
         except Board.DoesNotExist:
             return Response({'message': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+# 댓글 조회/작성
+class CommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        board_id = self.kwargs['pk']
+        return Comment.objects.filter(board_id=board_id)
+    
+# 댓글 수정/삭제
+class CommentUpdateView(RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        board_id = self.kwargs['pk']
+        comment_id = self.kwargs['comment_id']
+        return Comment.objects.filter(board_id=board_id, id=comment_id)
+    
+    def get_object(self):
+        board_id = self.kwargs['pk']
+        comment_id = self.kwargs['comment_id']
+        return get_object_or_404(Comment, board_id=board_id, id=comment_id)
