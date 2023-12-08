@@ -5,10 +5,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from django.core.exceptions import PermissionDenied
 
 class BoardListCreateView(generics.ListCreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+    
+    #관리자만 공지 작성할 수 있게 설정
+    def perform_create(self, serializer):
+        if self.request.data.get('category') == '공지':
+            if not self.request.user.is_staff:  # 관리자 권한 확인
+                raise PermissionDenied("공지는 관리자만 작성할 수 있습니다.")
+        serializer.save()
     
 class BoardRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Board.objects.all()
