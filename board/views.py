@@ -9,6 +9,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
+from django.core.exceptions import PermissionDenied
 
 class BoardListCreateView(generics.ListCreateAPIView):
     queryset = Board.objects.all()
@@ -17,6 +18,13 @@ class BoardListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Board.objects.annotate(comment_count=Count('comments'))
         return queryset
+    
+    #관리자만 공지 작성할 수 있게 설정
+    def perform_create(self, serializer):
+        if self.request.data.get('category') == '공지':
+            if not self.request.user.is_staff:  # 관리자 권한 확인
+                raise PermissionDenied("공지는 관리자만 작성할 수 있습니다.")
+        serializer.save()
     
 class BoardRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Board.objects.all()
