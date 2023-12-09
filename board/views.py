@@ -3,10 +3,8 @@ from .models import Board, Comment
 from .serializers import BoardSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.core.exceptions import PermissionDenied
@@ -53,7 +51,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         board_id = self.kwargs['pk']
-        return Comment.objects.filter(board_id=board_id)
+        return Comment.objects.filter(board_id=board_id, parent_comment=None)
     
 # 댓글 수정/삭제
 class CommentUpdateView(RetrieveUpdateDestroyAPIView):
