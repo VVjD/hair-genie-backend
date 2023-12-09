@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'storages',
 ]
 
 REST_FRAMEWORK = {
@@ -141,6 +142,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# aws
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = 'AKIA2EBKEOK37SWBQXMV'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_REGION_NAME = 'ap-northeast-2'
+
+AWS_STORAGE_BUCKET_NAME = 'hairgenie-bucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME)
+AWS_QUERYSTRING_AUTH = False
 
 # custom user model
 AUTH_USER_MODEL = 'user.User'
