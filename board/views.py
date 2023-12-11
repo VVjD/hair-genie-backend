@@ -67,3 +67,12 @@ class CommentUpdateView(RetrieveUpdateDestroyAPIView):
         board_id = self.kwargs['pk']
         comment_id = self.kwargs['comment_id']
         return get_object_or_404(Comment, board_id=board_id, id=comment_id)
+    
+#사용자 댓글 모아보기
+class UserCommentsListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return Comment.objects.filter(customer=user_id)
+    
