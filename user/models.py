@@ -29,14 +29,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('각진형', '각진형'),
     ]
 
-    uid = models.CharField(max_length=24, unique=True)
-    uname = models.CharField(max_length=24)
-    unickname = models.CharField(max_length=24)
-    profile_image = models.ImageField(null=True, blank=True, upload_to='profile_imgs')
-    face_shape = models.CharField(max_length=24, choices=FACE_SHAPE_CHOICES, default='선택')
-    uphone = models.CharField(max_length=24)
-    email = models.EmailField(unique=True)
-    signuptime = models.DateTimeField(auto_now_add=True)
+    uid = models.CharField(max_length=24, unique=True, verbose_name='아이디')
+    uname = models.CharField(max_length=24, verbose_name='이름')
+    unickname = models.CharField(max_length=24, verbose_name='별명')
+    profile_image = models.ImageField(null=True, blank=True, upload_to='profile_imgs', verbose_name='프로필 사진')
+    face_shape = models.CharField(max_length=24, choices=FACE_SHAPE_CHOICES, default='선택', verbose_name='얼굴형')
+    uphone = models.CharField(max_length=24, verbose_name='전화번호')
+    email = models.EmailField(unique=True, verbose_name='이메일')
+    signuptime = models.DateTimeField(auto_now_add=True, verbose_name='가입 시간')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
