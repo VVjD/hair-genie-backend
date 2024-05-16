@@ -1,12 +1,17 @@
 # 🧞‍♂️ Hair Genie
+
+![main](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/77d4bfc2-0203-443b-b80b-ca401fa1d594)
 > 딥러닝 기반 이미지 변환 기술을 활용하여 사용자가 원하는 헤어스타일을 가상으로 체험할 수 있습니다. 더불어 헤어스타일 선택에 도움을 줄 수 있도록 딥러닝 기반 얼굴형 분석 서비스와 미용실 예약 서비스를 제공합니다.
 
 <br>
 
 - 개발 기간 : 2023/3/15 ~ 2023/11/28
 - 개발 인원 : 풀스택 3명
-- [프론트엔드 github 링크](https://github.com/chaeriIM/hair-genie-frontend)
-- [백엔드 github 링크](https://github.com/gustnin/hair-genie-backend)
+- 자료
+    |📄|[논문](https://drive.google.com/file/d/1GKeAkm_ArpB-fq0reM6vX_mLwQ0hRXXP/view?usp=sharing)|
+    |---|---|
+    |🔗|[프론트엔드 github 링크](https://github.com/chaeriIM/hair-genie-frontend)|
+    |🔗|[백엔드 github 링크](https://github.com/gustnin/hair-genie-backend)|
 
 <br>
 
@@ -48,8 +53,10 @@
 <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat-square&logo=amazonrds&logoColor=fff"/> 
 <img src="https://img.shields.io/badge/AmazonS3-569A31?style=flat-square&logo=amazons3&logoColor=fff"/>
 
-**DEEPLEARNING**  
+**DEEP LEARNING**  
 <img src="https://img.shields.io/badge/Google Colab-F9AB00?style=flat-square&logo=googlecolab&logoColor=fff"/> 
+<img src="https://img.shields.io/badge/Pytorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=fff"/> 
+<img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=fff"/> 
 
 <br>
 
@@ -82,6 +89,10 @@
 |:---:|
 |![얼굴형 분석](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/74bd1b19-f129-4d8d-815f-34b26914359b)|
 
+|챗봇|
+|:---:|
+|![챗봇](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/c3de4a01-4d31-4f1d-931a-46ee36a5cbbb)|
+
 |주변 미용실 찾기|
 |:---:|
 |![미용실 찾기](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/9070f8c0-deb9-4df9-9012-e6993ee86b60)|
@@ -96,7 +107,7 @@
 
 |마이페이지|
 |:---:|
-|![마이페이지](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/0384f1a4-6c38-4ebd-9614-013c3759d349)|
+|![마이페이지](https://github.com/chaeriIM/hair-genie-frontend/assets/51882233/2abf9e82-b293-43ff-a705-3bb721d4b26d)|
 
 |알림/리뷰|
 |:---:|
@@ -123,7 +134,7 @@
 - **기능**
     - DB 설계, 헤어스타일 합성
 - **딥러닝**
-    - 헤어스타일 합성 모델 학습
+    - 헤어스타일 합성 모델 학습(StarGAN v2)
 
 <br>
     
@@ -134,7 +145,7 @@
 - **기능**
     - 회원가입, 로그인, ID/PW 찾기, 헤어스타일 합성, 얼굴형 분석, 주변 미용실 찾기, 게시판 댓글, 마이페이지-정보 수정/탈퇴/얼굴형타입, 챗봇
 - **딥러닝**
-    - 얼굴형 분류 모델 학습
+    - 얼굴형 분류 모델 학습(Inception v3)
 
 <br>
 
@@ -146,4 +157,14 @@
 - **기능**
     - 미용실 예약, 게시판(검색, 등록, 수정, 삭제, 조회), 리뷰, 알림, 마이페이지-예약정보/게시글/댓글
 - **딥러닝**
-    - 헤어스타일 합성 모델 학습
+    - 헤어스타일 합성 모델 학습(StarGAN v2)
+
+<br>
+
+## 💫 Reference
+#### 헤어스타일 합성
+- [StarGAN v2](https://github.com/clovaai/stargan-v2)
+- [About_Me](https://github.com/junnnn-a/About_Me)
+
+####  얼굴형 분석
+- Inception v3
